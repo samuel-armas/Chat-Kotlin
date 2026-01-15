@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">CHAT UNCA</string>
+
+    <string name="item_perfil">Perfil</string>
+    <string name="item_usuarios">Usuarios</string>
+    <string name="item_chats">Chats </string>
+    <string name="tv_Titulo">Título</string>
+
+    <string name="opcionEmail">Continuar con Email</string>
+    <string name="opcionGoogle">Continuar con Google</string>
+
+    <string name="txt_login">Login</string>
+    <string name="et_Email">Correo electronico</string>
+    <string name="et_Password">Contraseña</string>
+    <string name="btn_ingresar">Ingresar</string>
+    <string name="txt_no_tienes_cuenta">¿No tienes una cuenta?</string>
+    <string name="tv_registrarme">Registrarme</string>
+    <string name="tv_recuperar_cuenta">¿Olvidé la contraseña? <b> Recuperar</b></string>
+
+
+    <string name="txt_registro">Registro</string>
+    <string name="et_Nombres">Nombres</string>
+    <string name="et_R_password">Repota la contraseña</string>
+    <string name="btn_Registrar">Registrar</string>
+
+
+    <string name="btn_ActualizarInfo">Actualizar</string>
+    <string name="btn_CambiarPass">Cambiar contraseña</string>
+    <string name="btn_Cerrarsesion">Cerrar sesión</string>
+
+
+    <string name="txt_nombres">Nombres: </string>
+    <string name="tv_nombres"> -- </string>
+    <string name="txt_email">Email</string>
+    <string name="tv_email"> -- </string>
+    <string name="txt_proveedor">Proveedor</string>
+    <string name="tv_proveedor"> -- </string>
+    <string name="txt_t_registro">Miembro desde</string>
+    <string name="tv_t_registro"> -- </string>
+
+    <string name="Txt_titulo_edit">Editar información</string>
+
+    <string name="btn_actualizar">Actualizar</string>
+    <string name="default_web_client_id">106468548325-ba04tb6ogcaqgdtpea1342k60glegeqe.apps.googleusercontent.com</string>
+
+    <string name="Txt_olvide_pass">Olvidé password</string>
+    <string name="Txt_ingrese_email">Ingrese el email para el envío de las instrucciones de recuperación</string>
+    <string name="btn_Enviar">Enviar</string>
+
+
+    <string name="Txt_cambiar_pass">Cambiar contraseña</string>
+    <string name="et_pass_actual">Constraseña actual</string>
+    <string name="et_pass_nueva">Constraseña nueva</string>
+    <string name="et_r_pass_nueva">Repita contraseña nueva</string>
+    <string name="btn_CambiarPassword">Cambiar</string>
+
+
+    <string name="item_uid">uid del usuario</string>
+    <string name="item_nombre">nombre del usuario</string>
+    <string name="item_email">email del usuario</string>
+
+    <string name="et_buscar_usuario">Buscar usuario</string>
+
+
+    <string name="txt_nombre_usuario">Nombres</string>
+    <string name="txt_estado_chat">Online</string>
+    <string name="Et_mensaje_chat">Escriba algo...</string>
+    <string name="Tv_tiempo_mensaje">dd/mm/yyyy hh:mmm</string>
+
+    <string name="etBuscar">Buscar</string>
+    <string name="tvFecha">dd/MM/yyyy</string>
+
+    <string name="BtnCerrarVisualizador">Cerrar</string>
+
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".OpcionesLoginActivity">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/icono_chat"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/opcionEmail"
+        android:text="@string/opcionEmail"
+        android:layout_marginTop="35dp"
+        android:textAllCaps="true"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/opcionGoogle"
+        android:text="@string/opcionGoogle"
+        android:textAllCaps="true"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"/>
+ 
+</androidx.appcompat.widget.LinearLayoutCompat>

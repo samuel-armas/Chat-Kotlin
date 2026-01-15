@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "106468548325",
+    "firebase_url": "https://chat-kotlin-7719c-default-rtdb.firebaseio.com",
+    "project_id": "chat-kotlin-7719c",
+    "storage_bucket": "chat-kotlin-7719c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106468548325:android:58890188baa4c958a0fe0c",
+        "android_client_info": {
+          "package_name": "com.example.practica1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106468548325-209oogjmj6q7pvm1br3i1b1387maqqju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.practica1",
+            "certificate_hash": "dd00567b475b86d92aac2dcc273161a2b87c4116"
+          }
+        },
+        {
+          "client_id": "106468548325-ba04tb6ogcaqgdtpea1342k60glegeqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApqZ1sXDDgRmdqeNiddDGAhSEpZEUx7W8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106468548325-ba04tb6ogcaqgdtpea1342k60glegeqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

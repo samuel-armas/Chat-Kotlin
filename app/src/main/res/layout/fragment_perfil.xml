@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragmentos.FragmentPerfil">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_perfil"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_img_perfil"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+
+        <!---Nombres-->
+        <TextView
+            android:id="@+id/txt_nombres"
+            android:text="@string/txt_nombres"
+            android:layout_below="@id/iv_perfil"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id= "@+id/tv_nombres"
+            android:text="@string/tv_nombres"
+            android:layout_below="@id/iv_perfil"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!---Email-->
+
+        <TextView
+            android:id="@+id/txt_email"
+            android:text="@string/txt_email"
+            android:layout_below="@id/txt_nombres"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id= "@+id/tv_email"
+            android:text="@string/tv_email"
+            android:layout_below="@id/txt_nombres"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!---Proveedor-->
+
+        <TextView
+            android:id="@+id/txt_proveedor"
+            android:text="@string/txt_proveedor"
+            android:layout_below="@id/txt_email"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id= "@+id/tv_proveedor"
+            android:text="@string/tv_proveedor"
+            android:layout_below="@id/txt_email"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <!---Tiempo de registro-->
+
+        <TextView
+            android:id="@+id/txt_t_registro"
+            android:text="@string/txt_t_registro"
+            android:layout_below="@id/txt_proveedor"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id= "@+id/tv_t_registro"
+            android:text="@string/tv_t_registro"
+            android:layout_below="@id/txt_proveedor"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_ActualizarInfo"
+            android:text="@string/btn_ActualizarInfo"
+            android:textAllCaps="true"
+            android:layout_below="@id/tv_t_registro"
+            android:layout_centerInParent="true"
+            app:cornerRadius="8dp"
+            android:layout_marginTop="25dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+        
+        
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_CambiarPass"
+            android:layout_below="@id/btn_ActualizarInfo"
+            android:text="@string/btn_CambiarPass"
+            android:layout_centerInParent="true"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:cornerRadius="8dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_Cerrarsesion"
+            android:text="@string/btn_Cerrarsesion"
+            android:textAllCaps="true"
+            android:layout_below="@id/btn_CambiarPass"
+            android:layout_marginTop="10dp"
+            android:layout_centerInParent="true"
+            app:cornerRadius="10dp"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+
+
+</ScrollView>
