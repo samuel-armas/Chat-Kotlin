@@ -31,6 +31,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    packaging {
+        resources {
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/*.kotlin_module"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+        }
+    }
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -62,5 +73,15 @@ dependencies {
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     implementation("com.google.firebase:firebase-messaging-ktx:23.3.1")
     implementation("com.google.firebase:firebase-messaging:24.0.0")
+
+    // Firebase Cloud Messaging
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+
+// Volley (para enviar la petición HTTP)
+    implementation("com.android.volley:volley:1.2.1")
+
+// Google Auth Library (para obtener el access token)
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
+
 
 }

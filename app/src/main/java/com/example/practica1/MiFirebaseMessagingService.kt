@@ -9,6 +9,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.practica1.Chat.ChatActivity
@@ -16,69 +17,82 @@ import com.example.practica1.Chat.ChatActivity
 
 class MiFirebaseMessagingService : FirebaseMessagingService() {
 
+    companion object {
+        const val CHANNEL_ID = "CHAT_MESSAGES_HIGH"
+    }
+
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         guardarToken(token)
     }
 
     private fun guardarToken(token: String) {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val uid = firebaseAuth.uid ?: return
+        val uid = FirebaseAuth.getInstance().uid ?: return
 
-        val ref = FirebaseDatabase.getInstance()
+        FirebaseDatabase.getInstance()
             .getReference("Usuarios")
             .child(uid)
-
-        ref.child("fcmToken").setValue(token)
+            .child("fcmToken")
+            .setValue(token)
     }
 
-    override fun onMessageReceived(message: RemoteMessage) {
-        super.onMessageReceived(message)
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        val titulo = message.notification?.title ?: "Nuevo mensaje"
-        val cuerpo = message.notification?.body ?: "Tienes un nuevo mensaje"
-        val senderUid = message.data["senderUid"] ?: ""
+        val senderUid = remoteMessage.data["senderUid"] ?: return
 
-        mostrarNotificacion(titulo, cuerpo, senderUid)
+        // 🚫 Si el chat ya está abierto
+        if (ChatActivity.chatAbiertoConUid == senderUid) return
+
+        val title = remoteMessage.data["title"] ?: "Nuevo mensaje"
+        val body = remoteMessage.data["body"] ?: ""
+
+        mostrarNotificacion(title, body, senderUid)
     }
-    private fun crearCanalNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val canal = NotificationChannel(
-                "MENSAJES",
-                "Mensajes",
-                NotificationManager.IMPORTANCE_HIGH
-            )
 
-            canal.description = "Notificaciones de mensajes"
+    private fun mostrarNotificacion(title: String, body: String, senderUid: String) {
 
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(canal)
+        val intent = Intent(this, ChatActivity::class.java).apply {
+            putExtra("uid", senderUid)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
-    }
-    private fun mostrarNotificacion(titulo: String, cuerpo: String, senderUid: String) {
-        crearCanalNotificacion()
-        val intent = Intent(this, ChatActivity::class.java)
-        intent.putExtra("uid", senderUid)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            senderUid.hashCode(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(this, "MENSAJES")
-            .setSmallIcon(R.drawable.ic_notification) // 👈 AJUSTA ESTE ÍCONO
-            .setContentTitle(titulo)
-            .setContentText(cuerpo)
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Mensajes de chat",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                enableVibration(true)
+                enableLights(true)
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // 🔥 HEADS-UP
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
 
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(System.currentTimeMillis().toInt(), notification)
+        notificationManager.notify(
+            System.currentTimeMillis().toInt(),
+            notification
+        )
     }
 
-
 }
+

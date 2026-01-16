@@ -9,7 +9,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Base64
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +36,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
+import com.google.auth.oauth2.GoogleCredentials
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import kotlin.text.toString
+
 
 class ChatActivity : AppCompatActivity() {
 
@@ -43,6 +54,8 @@ class ChatActivity : AppCompatActivity() {
     private var miuid = ""
     private var chatRuta = ""
     private var imagenUri : Uri? = null
+    private var miNombre = ""
+    private var tokenReceptor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +88,28 @@ class ChatActivity : AppCompatActivity() {
         binding.enviarFAB.setOnClickListener {
             validarMensaje()
         }
-
+        cargarMiInfo()
         cargarInfo()
-
+        escucharEstadoYEscribiendo()
         cargarMensajes()
+        binding.EtMensajeChat.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    actualizarEscribiendo(false)
+                } else {
+                    actualizarEscribiendo(true)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+    }
+
+    companion object {
+        var chatAbiertoConUid: String? = null
     }
 
     private fun cargarMensajes() {
@@ -135,9 +166,6 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val nombres = "${snapshot.child("nombres").value}"
                     val imagenBase64 = "${snapshot.child("imagen").value}"
-                    val estado = "${snapshot.child("estado").value}"
-
-                    binding.txtEstadoChat.text = estado
 
                     binding.txtNombreUsuario.text = nombres
                     if (!imagenBase64.isNullOrEmpty()) {
@@ -151,12 +179,25 @@ class ChatActivity : AppCompatActivity() {
                     } else {
                         binding.toolbarIv.setImageResource(R.drawable.perfil_usuario)
                     }
+
                 }
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
             })
     }
+    private fun cargarMiInfo() {
+        val ref = FirebaseDatabase.getInstance().getReference("Usuarios")
+        ref.child(miuid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    miNombre = snapshot.child("nombres").value?.toString() ?: "Mensaje"
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
 
     private fun imagenGaleria (){
         val intent = Intent(Intent.ACTION_PICK)
@@ -241,6 +282,14 @@ class ChatActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 progressDialog.dismiss()
                 binding.EtMensajeChat.setText("")
+                // 👉 AQUÍ ENVIAMOS LA NOTIFICACIÓN
+                obtenerTokenReceptor(
+                    if (tipoMensaje == Constantes.MENSAJE_TIPO_IMAGEN)
+                        "Se envió una imagen"
+                    else
+                        mensaje, tipoMensaje
+                )
+                actualizarEscribiendo(false)
             }
             .addOnFailureListener { e->
                 progressDialog.dismiss()
@@ -261,14 +310,170 @@ class ChatActivity : AppCompatActivity() {
         ref!!.updateChildren(hashMap)
     }
 
+    override fun onStop(){
+        super.onStop()
+        actualizarEscribiendo(false)
+    }
     override fun onResume() {
         super.onResume()
         actualizarEstado("Online")
+        actualizarEscribiendo(false)
+        chatAbiertoConUid = uid
     }
 
     override fun onPause() {
         super.onPause()
         actualizarEstado("Offline")
+        actualizarEscribiendo(false)
+        chatAbiertoConUid = null
+    }
+
+    private fun obtenerAccessToken(): String? {
+        return try {
+            val serviceAccountStream = applicationContext.assets.open("service_account.json")
+
+            val googleCredentials = GoogleCredentials
+                .fromStream(serviceAccountStream)
+                .createScoped(
+                    listOf("https://www.googleapis.com/auth/firebase.messaging")
+                )
+
+            googleCredentials.refreshIfExpired()
+            googleCredentials.accessToken.tokenValue
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+        private fun obtenerTokenReceptor(mensaje: String, tipoMensaje: String) {
+            FirebaseDatabase.getInstance()
+                .getReference("Usuarios")
+                .child(uid)
+                .child("fcmToken")
+                .get()
+                .addOnSuccessListener { snapshot ->
+
+                    tokenReceptor = snapshot.getValue(String::class.java) ?: ""
+
+                    Log.d("FCM_RECEPTOR", tokenReceptor)
+
+                    if (tokenReceptor.isNotEmpty()) {
+                        prepararNotificacion(mensaje, tokenReceptor, tipoMensaje)
+                    } else {
+                        Log.e("FCM_RECEPTOR", "TOKEN VACÍO")
+                    }
+                }
+    }
+
+    private fun prepararNotificacion(
+        mensaje: String,
+        tokenReceptor: String,
+        tipoMensaje: String
+    ) {
+        val data = JSONObject()
+        val message = JSONObject()
+        val main = JSONObject()
+
+        data.put("title", miNombre)
+        data.put(
+            "body",
+            if (tipoMensaje == Constantes.MENSAJE_TIPO_IMAGEN)
+                "📷 Imagen"
+            else
+                mensaje
+        )
+        data.put("senderUid", miuid)
+        data.put("type", "chat")
+
+        message.put("token", tokenReceptor)
+        message.put("data", data)
+
+        main.put("message", message)
+
+        enviarNotificacion(main)
+    }
+
+
+
+
+    private fun enviarNotificacion(notificationJson: JSONObject) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val accessToken = obtenerAccessToken()
+            Log.d("FCM_JSON", notificationJson.toString(4))
+            Log.d("FCM_TOKEN", accessToken ?: "TOKEN NULL")
+            if (accessToken == null) {
+                return@launch
+            }
+
+            val url =
+                "https://fcm.googleapis.com/v1/projects/chat-kotlin-7719c/messages:send"
+
+            withContext(Dispatchers.Main) {
+
+                val request = object : com.android.volley.toolbox.JsonObjectRequest(
+                    Method.POST,
+                    url,
+                    notificationJson,
+                    { response ->
+                        // Notificación enviada correctamente
+                        Log.d("FCM_TOKEN", accessToken)
+                    },
+                    { error ->
+                        error.printStackTrace()
+                    }
+                ) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Content-Type"] = "application/json"
+                        headers["Authorization"] = "Bearer $accessToken"
+                        return headers
+                    }
+                }
+
+                com.android.volley.toolbox.Volley
+                    .newRequestQueue(this@ChatActivity)
+                    .add(request)
+            }
+        }
+    }
+
+    private fun escucharEstadoYEscribiendo() {
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("Usuarios")
+            .child(uid) // 👈 UID DEL RECEPTOR
+
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val estado = snapshot.child("estado").value?.toString() ?: "Offline"
+                val escribiendo = snapshot.child("escribiendo").value as? Boolean ?: false
+
+                if (escribiendo) {
+                    binding.txtEstadoChat.text = "Escribiendo..."
+                } else {
+                    binding.txtEstadoChat.text = estado
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    private fun actualizarEscribiendo(escribiendo: Boolean) {
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("Usuarios")
+            .child(miuid)
+            .child("escribiendo")
+            .setValue(escribiendo)
+
+        binding.IbRegresar.setOnClickListener {
+            actualizarEscribiendo(false)
+            onBackPressedDispatcher.onBackPressed()
+        }
+
     }
 }
 
