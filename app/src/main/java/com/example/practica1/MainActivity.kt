@@ -20,6 +20,9 @@ import com.example.practica1.fragmentos.FragmentUsuarios
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
+import android.Manifest
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +41,8 @@ class MainActivity : AppCompatActivity() {
 
         //FRAGMENTO POR DEFECTO
         verFragmentoPerfil()
-
+        obtenerTokenFCM()
+        solicitarPermisoNotificaciones()
         binding.bottomNV.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.item_perfil->{
@@ -125,6 +129,8 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         actualizarEstado("Offline")
     }
+
+    //AQUI ESTA EN DUDA, ESTA FUNCION YA AGREGA EL TOKEN (VERIFICAR)
     private fun agregarToken (){
         val miuid = "${firebaseAuth.uid}"
         FirebaseMessaging.getInstance().token
@@ -154,13 +160,11 @@ class MainActivity : AppCompatActivity() {
             }
     }
     private fun solicitarPermisoNotificaciones (){
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_DENIED){
                 concederPermiso.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-
             }
-
         }
     }
     private val concederPermiso = registerForActivityResult(ActivityResultContracts.RequestPermission()){esConcedido->
@@ -169,6 +173,18 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun obtenerTokenFCM() {
+        FirebaseMessaging.getInstance().token
+            .addOnSuccessListener { token ->
+                val uid = FirebaseAuth.getInstance().uid ?: return@addOnSuccessListener
+
+                FirebaseDatabase.getInstance()
+                    .getReference("Usuarios")
+                    .child(uid)
+                    .child("fcmToken")
+                    .setValue(token)
+            }
+    }
 }
 
 

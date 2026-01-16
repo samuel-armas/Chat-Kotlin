@@ -61,4 +61,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     implementation("com.google.firebase:firebase-messaging-ktx:23.3.1")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
+
 }
