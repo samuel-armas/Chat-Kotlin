@@ -24,7 +24,7 @@ import android.Manifest
 
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        aplicarInsets(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
 
         comprobarSesion()

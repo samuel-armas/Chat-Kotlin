@@ -19,10 +19,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.practica1.Adaptadores.AdaptadorChat
+import com.example.practica1.BaseActivity
 import com.example.practica1.Constantes
 import com.example.practica1.Modelos.Chat
 import com.example.practica1.R
@@ -47,7 +49,7 @@ import org.json.JSONObject
 import kotlin.text.toString
 
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity () {
 
     private lateinit var binding : ActivityChatBinding
     private var uid = ""
@@ -62,7 +64,10 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
+
+
         setContentView(binding.root)
+        aplicarInsets(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
         progressDialog = ProgressDialog (this)
@@ -107,7 +112,19 @@ class ChatActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                imeInsets.bottom
+            )
+
+            insets
+        }
     }
 
     companion object {
@@ -486,6 +503,7 @@ class ChatActivity : AppCompatActivity() {
             .child(uid)
             .removeValue()
     }
+
 }
 
 

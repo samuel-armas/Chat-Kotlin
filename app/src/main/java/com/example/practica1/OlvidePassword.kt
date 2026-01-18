@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.practica1.databinding.ActivityOlvidePasswordBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class OlvidePassword : AppCompatActivity() {
+class OlvidePassword : BaseActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityOlvidePasswordBinding
@@ -23,7 +23,7 @@ class OlvidePassword : AppCompatActivity() {
         binding = ActivityOlvidePasswordBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-
+        aplicarInsets(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
         progressDialog = ProgressDialog(this)

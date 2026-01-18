@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 
-class OpcionesLoginActivity : AppCompatActivity() {
+class OpcionesLoginActivity : BaseActivity() {
 
     private lateinit var binding : ActivityOpcionesLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -30,6 +30,8 @@ class OpcionesLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOpcionesLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        aplicarInsets(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Espere por favor")

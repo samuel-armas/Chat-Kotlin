@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlin.toString
 
-class RegistroEmailActivity : AppCompatActivity() {
+class RegistroEmailActivity : BaseActivity() {
     private lateinit var binding : ActivityRegistroEmailBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var progressDialog: ProgressDialog
@@ -23,6 +23,8 @@ class RegistroEmailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistroEmailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        aplicarInsets(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Espere por favor")

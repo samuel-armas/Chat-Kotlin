@@ -25,7 +25,6 @@ class LoginEmailActivity : AppCompatActivity() {
 
         binging = ActivityLoginEmailBinding.inflate(layoutInflater)
         setContentView(binging.root)
-
         firebaseAuth = FirebaseAuth.getInstance()
 
         progressDialog = ProgressDialog(this)

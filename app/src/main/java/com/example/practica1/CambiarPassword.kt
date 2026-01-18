@@ -14,7 +14,7 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class CambiarPassword : AppCompatActivity() {
+class CambiarPassword : BaseActivity() {
     private lateinit var binding: ActivityCambiarPasswordBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -25,6 +25,7 @@ class CambiarPassword : AppCompatActivity() {
 
         binding = ActivityCambiarPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        aplicarInsets(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseUser = firebaseAuth.currentUser!!

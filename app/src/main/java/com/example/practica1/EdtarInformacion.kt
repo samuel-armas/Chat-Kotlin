@@ -16,7 +16,7 @@ import com.google.firebase.database.*
 
 import java.io.ByteArrayOutputStream
 
-class EdtarInformacion : AppCompatActivity() {
+class EdtarInformacion : BaseActivity() {
 
     private lateinit var binding: ActivityEdtarInformacionBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -54,6 +54,7 @@ class EdtarInformacion : AppCompatActivity() {
 
         binding = ActivityEdtarInformacionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        aplicarInsets(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
