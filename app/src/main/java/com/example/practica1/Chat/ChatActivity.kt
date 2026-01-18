@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import com.google.auth.oauth2.GoogleCredentials
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -299,7 +301,6 @@ class ChatActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
     }
 
     private fun actualizarEstado (estado : String){
@@ -316,9 +317,10 @@ class ChatActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
+        chatAbiertoConUid = uid
         actualizarEstado("Online")
         actualizarEscribiendo(false)
-        chatAbiertoConUid = uid
+        limpiarNoLeidos()
     }
 
     override fun onPause() {
@@ -474,6 +476,15 @@ class ChatActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+    }
+
+        private fun limpiarNoLeidos() {
+        FirebaseDatabase.getInstance()
+            .getReference("Usuarios")
+            .child(miuid)
+            .child("noLeidos")
+            .child(uid)
+            .removeValue()
     }
 }
 

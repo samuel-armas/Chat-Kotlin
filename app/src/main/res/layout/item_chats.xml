@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -43,6 +44,22 @@
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/txtBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="20dp"
+            android:minHeight="20dp"
+            android:padding="3dp"
+            android:background="@drawable/bg_badge"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/tvFecha"
+            tools:text="3"/>
 
     </RelativeLayout>
 

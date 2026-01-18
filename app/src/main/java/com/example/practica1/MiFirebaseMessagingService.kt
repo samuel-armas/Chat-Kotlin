@@ -11,8 +11,13 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.practica1.Chat.ChatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 
 
 class MiFirebaseMessagingService : FirebaseMessagingService() {
@@ -39,6 +44,9 @@ class MiFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         val senderUid = remoteMessage.data["senderUid"] ?: return
+
+        if (ChatActivity.chatAbiertoConUid == senderUid) return
+        incrementarNoLeidos(senderUid)
 
         // 🚫 Si el chat ya está abierto
         if (ChatActivity.chatAbiertoConUid == senderUid) return
@@ -93,6 +101,33 @@ class MiFirebaseMessagingService : FirebaseMessagingService() {
             notification
         )
     }
+    private fun incrementarNoLeidos(senderUid: String) {
+
+        val miUid = FirebaseAuth.getInstance().uid ?: return
+
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("Usuarios")
+            .child(miUid)              // 👈 YO (receptor)
+            .child("noLeidos")
+            .child(senderUid)          // 👈 chat con quien
+            .child("count")
+
+        ref.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(currentData: MutableData): Transaction.Result {
+                val actual = currentData.getValue(Int::class.java) ?: 0
+                currentData.value = actual + 1
+                Log.d("BADGE_DEBUG", "Nuevo count: ${actual + 1}")
+                return Transaction.success(currentData)
+            }
+
+            override fun onComplete(
+                error: DatabaseError?,
+                committed: Boolean,
+                snapshot: DataSnapshot?
+            ) {}
+        })
+    }
+
 
 }
 

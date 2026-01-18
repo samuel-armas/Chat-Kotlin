@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.core.view.View
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import kotlin.coroutines.Continuation
 import com.example.practica1.R
 
@@ -45,10 +46,7 @@ class AdaptadorChats : RecyclerView.Adapter<AdaptadorChats.HolderChats>{
         return HolderChats(binding.root)
     }
 
-    override fun onBindViewHolder(
-        holder: HolderChats,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: HolderChats, position: Int) {
         val modeloChats = chatArrayList[position]
 
         cargarUltimoMensaje(modeloChats, holder)
@@ -61,6 +59,7 @@ class AdaptadorChats : RecyclerView.Adapter<AdaptadorChats.HolderChats>{
                 context.startActivity(intent)
             }
         }
+
     }
 
     private fun cargarUltimoMensaje( modeloChats: Chats, holder: HolderChats) {
@@ -120,6 +119,29 @@ class AdaptadorChats : RecyclerView.Adapter<AdaptadorChats.HolderChats>{
 
         modeloChats.uidRecibimos = uidRecibimos
 
+        val refBadge = FirebaseDatabase.getInstance()
+            .getReference("Usuarios")
+            .child(miUid)
+            .child("noLeidos")
+            .child(uidRecibimos)
+            .child("count")
+
+        refBadge.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val count = snapshot.getValue(Int::class.java) ?: 0
+
+                if (count > 0) {
+                    holder.txtBadge.visibility = android.view.View.VISIBLE
+                    holder.txtBadge.text = count.toString()
+                } else {
+                    holder.txtBadge.visibility = android.view.View.GONE
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+
         val ref = FirebaseDatabase.getInstance().getReference("Usuarios")
         ref.child(uidRecibimos)
             .addValueEventListener(object : ValueEventListener{
@@ -155,5 +177,6 @@ class AdaptadorChats : RecyclerView.Adapter<AdaptadorChats.HolderChats>{
         var tvNombres = binding.tvNombres
         var tvUltimoMensaje = binding.tvUltimoMensaje
         var tvFecha = binding.tvFecha
+        var txtBadge = binding.txtBadge
     }
 }
