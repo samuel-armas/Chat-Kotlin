@@ -1,6 +1,6 @@
 # InfoMensajes
 
-Aplicación móvil de mensajería en tiempo real desarrollada en Kotlin, con arquitectura MVVM e integración completa con Firebase.
+Aplicación móvil de mensajería en tiempo real desarrollada en Kotlin, con arquitectura MVM e integración completa con Firebase.
 
 <!-- Agrega aquí 2-4 capturas de pantalla o un GIF corto de la app en uso -->
 <!-- ![screenshot](ruta/a/tu/imagen.png) -->
