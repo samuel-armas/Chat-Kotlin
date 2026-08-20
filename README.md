@@ -38,6 +38,17 @@ La app sigue el patrón MVVM: las Views (Activities/Fragments) observan los View
 3. Agrega tu propio archivo `google-services.json` (Firebase) dentro de `app/`.
 4. Sincroniza Gradle y ejecuta en un emulador o dispositivo físico.
 
+## Capturas de pantalla
+
+<p align="center">
+  <img src="screenshots/1.jpeg" width="200" />
+  <img src="screenshots/2.jpeg" width="200" />
+  <img src="screenshots/3.jpeg" width="200" />
+  <img src="screenshots/4.jpeg" width="200" />
+  <img src="screenshots/5.jpeg" width="200" />
+  <img src="screenshots/6.jpeg" width="200" />
+</p>
+
 ## Autor
 
 Rogelio Samuel Armas García — [LinkedIn](https://www.linkedin.com/in/rogelio-samuel-armas-garc%C3%ADa-492885307/?skipRedirect=true)
